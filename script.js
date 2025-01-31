@@ -7,12 +7,18 @@ $(document).ready(function() {
         const interestRate = parseFloat($("#interest-rate").val()) / 100; // Monthly interest rate (as decimal)
         const loanTerm = parseInt($("#loan-term").val()); // Loan term in months
 
-        // Calculate the monthly payment
-        const monthlyPayment = (loanAmount * interestRate) / (1 - Math.pow(1 + interestRate, -loanTerm));
-        
-        // Calculate total payment and total interest
-        const totalPayment = monthlyPayment * loanTerm;
-        const totalInterest = totalPayment - loanAmount;
+        // Check if interest rate is 0% (no interest)
+        let monthlyPayment, totalPayment, totalInterest;
+        if (interestRate === 0) {
+            monthlyPayment = loanAmount / loanTerm; // No interest, just divide loan amount by term
+            totalPayment = loanAmount; // Total payment is the same as loan amount
+            totalInterest = 0; // No interest
+        } else {
+            // Calculate the monthly payment with interest
+            monthlyPayment = (loanAmount * interestRate) / (1 - Math.pow(1 + interestRate, -loanTerm));
+            totalPayment = monthlyPayment * loanTerm;
+            totalInterest = totalPayment - loanAmount;
+        }
 
         // Display the results
         $("#monthly-payment").text(`₱${monthlyPayment.toFixed(2)}`);
